@@ -1,4 +1,5 @@
 ﻿using Ez.Magics;
+using System;
 using System.IO;
 
 namespace Ez.Assets.Writers
@@ -22,11 +23,10 @@ namespace Ez.Assets.Writers
         /// <summary>
         /// Tries write a text data to stream.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <inheritdoc/>
-        public bool TryWrite<T>(in T value, Stream stream)
+        public bool TryWrite(in object value, in Type type, Stream stream)
         {
-            if (typeof(T).IsAssignableFrom(typeof(string)))
+            if (type.IsAssignableFrom(typeof(string)))
             {
                 using var writer = new StreamWriter(stream, leaveOpen: true);
                 writer.Write((string)(object)value);

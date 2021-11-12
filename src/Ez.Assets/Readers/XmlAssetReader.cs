@@ -1,4 +1,5 @@
 ﻿using Ez.Magics;
+using System;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
@@ -24,27 +25,26 @@ namespace Ez.Assets.Readers
         /// <summary>
         /// Tries read a XML document from stream.
         /// </summary>
-        /// <typeparam name="T">Only can be <see cref="XmlReader"/>, <see cref="XmlDocument"/>, or <see cref="XPathDocument"/>.</typeparam>
         /// <inheritdoc/>
-        public bool TryRead<T>(Stream stream, out T value)
+        public bool TryRead(in Stream stream, in Type type, out object value)
         {
-            if (typeof(T).IsAssignableFrom(typeof(XmlReader)))
+            if (type.IsAssignableFrom(typeof(XmlReader)))
             {
-                value = (T)(object)XmlReader.Create(stream);
+                value = XmlReader.Create(stream);
                 return true;
             }
 
-            if (typeof(T).IsAssignableFrom(typeof(XmlDocument)))
+            if (type.IsAssignableFrom(typeof(XmlDocument)))
             {
                 var doc = new XmlDocument();
                 doc.Load(stream);
-                value = (T)(object)doc;
+                value = doc;
                 return true;
             }
             
-            if (typeof(T).IsAssignableFrom(typeof(XPathDocument)))
+            if (type.IsAssignableFrom(typeof(XPathDocument)))
             {
-                value = (T)(object)new XPathDocument(stream);
+                value = new XPathDocument(stream);
                 return true;
             }
 

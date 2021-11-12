@@ -1,4 +1,5 @@
 ﻿using Ez.Magics;
+using System;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
@@ -24,11 +25,10 @@ namespace Ez.Assets.Writers
         /// <summary>
         /// Tries write a XML document to stream.
         /// </summary>
-        /// <typeparam name="T">Only can be <see cref="XmlReader"/>, <see cref="XmlDocument"/>, or <see cref="XPathDocument"/>.</typeparam>
         /// <inheritdoc/>
-        public bool TryWrite<T>(in T value, Stream stream)
+        public bool TryWrite(in object value, in Type type, Stream stream)
         {
-            if (typeof(T).IsAssignableFrom(typeof(XmlWriter)))
+            if (type.IsAssignableFrom(typeof(XmlWriter)))
             {
                 var reader = (XmlReader)(object)value;
                 using var writer = XmlWriter.Create(stream);
@@ -36,14 +36,14 @@ namespace Ez.Assets.Writers
                 return true;
             }
 
-            if (typeof(T).IsAssignableFrom(typeof(XmlDocument)))
+            if (type.IsAssignableFrom(typeof(XmlDocument)))
             {
                 var doc = (XmlDocument)(object)value;
                 doc.Save(stream);
                 return true;
             }
 
-            if (typeof(T).IsAssignableFrom(typeof(XPathDocument)))
+            if (type.IsAssignableFrom(typeof(XPathDocument)))
             {
                 var xdoc = (XPathDocument)(object)value;
                 using var writer = XmlWriter.Create(stream);

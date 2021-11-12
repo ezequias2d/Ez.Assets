@@ -42,14 +42,11 @@ namespace Ez.Assets
         ~AssetManager() => Dispose(false);
 
         #region public methods
-        /// <summary>
-        /// Releases all resources used by the <see cref="AssetManager"/> class.
-        /// </summary>
+
+        /// <inheritdoc/>
         public void Dispose() => Dispose(true);
 
-        /// <summary>
-        /// Disposes all data that was loaded by this <see cref="AssetManager"/>.
-        /// </summary>
+        /// <inheritdoc/>
         public void Unload()
         {
             using(var operation = _disposableAssets.GetOperationList())
@@ -63,13 +60,8 @@ namespace Ez.Assets
             _loadedAssets.Clear();
         }
 
-        /// <summary>
-        /// Get the first loaded asset, if it is already loaded, otherwise load the asset from physical memory 
-        /// </summary>
-        /// <typeparam name="T">Type of asset.</typeparam>
-        /// <param name="assetName">Asset name.</param>
-        /// <returns>The first asset from asset name.</returns>
-        public T GetAsset<T>(string assetName)
+        /// <inheritdoc/>
+        public object GetAsset(string assetName, Type type)
         {
             if (_disposed)
                 throw new ObjectDisposedException(nameof(AssetManager));
@@ -78,11 +70,11 @@ namespace Ez.Assets
                 throw new ArgumentNullException(nameof(assetName));
 
             // Check for a previously loaded asset first
-            if (TryGetAsset(assetName, out T asset))
+            if (TryGetAsset(assetName, type, out var asset))
                 return asset;
 
             // Read the asset.
-            if (_assetSource.ReadAsset<T>(assetName, out asset))
+            if (_assetSource.ReadAsset(assetName, type, out asset))
                 LoadAsset(assetName, asset);
             else
                 throw new ArgumentException($"The asset {assetName} was not found");
@@ -90,27 +82,18 @@ namespace Ez.Assets
             return asset;
         }
 
-        /// <summary>
-        /// Loads an asset to the content manager.
-        /// </summary>
-        /// <typeparam name="T">The type of asset to be loaded.</typeparam>
-        /// <param name="assetName">The name of the asset to be loaded.</param>
-        /// <param name="asset">The asset to be loaded.</param>
-        public void LoadAsset<T>(string assetName, in T asset)
+        /// <inheritdoc/>
+        public void LoadAsset(string assetName, in object asset)
         {
             _loadedAssets.Add(assetName, asset);
             if (asset is IDisposable disposable)
                 _disposableAssets.Add(disposable);
         }
 
-        /// <summary>
-        /// Unloads an asset by type and name in a <see cref="IAssetManager"/> instance.
-        /// </summary>
-        /// <typeparam name="T">The type of asset to unload.</typeparam>
-        /// <param name="assetName">The name of the asset to be unloaded.</param>
-        public void UnloadAsset<T>(string assetName)
+        /// <inheritdoc/>
+        public void UnloadAsset(string assetName, Type type)
         {
-            if (TryGetAsset(assetName, out T asset))
+            if (TryGetAsset(assetName, type, out var asset))
             {
                 _loadedAssets.Remove(assetName, asset);
 
@@ -136,12 +119,12 @@ namespace Ez.Assets
             }
         }
 
-        private bool TryGetAsset<T>(string assetName, out T asset)
+        private bool TryGetAsset(string assetName, Type type, out object asset)
         {
+
             if (_loadedAssets.TryGetValue(assetName, out IReadOnlyCollection<object> objs))
             {
-                asset = (T)objs
-                    .First((element) => element is T);
+                asset = objs.First((element) => type.IsAssignableFrom(element.GetType()));
                 return true;
             }
             asset = default;
@@ -149,5 +132,4 @@ namespace Ez.Assets
         }
         #endregion
     }
-
 }

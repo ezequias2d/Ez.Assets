@@ -1,4 +1,5 @@
 ﻿using Ez.Magics;
+using System;
 using System.IO;
 
 namespace Ez.Assets.Readers
@@ -22,14 +23,13 @@ namespace Ez.Assets.Readers
         /// <summary>
         /// Tries read a text data from stream.
         /// </summary>
-        /// <typeparam name="T">Only can be <see cref="string"/>.</typeparam>
         /// <inheritdoc/>
-        public bool TryRead<T>(Stream stream, out T value)
+        public bool TryRead(in Stream stream, in Type type, out object value)
         {
-            if (typeof(T).IsAssignableFrom(typeof(string)))
+            if (type.IsAssignableFrom(typeof(string)))
             {
                 using var reader = new StreamReader(stream, leaveOpen: true);
-                value = (T)(object)reader.ReadToEnd();
+                value = reader.ReadToEnd();
                 return true;
             }
 

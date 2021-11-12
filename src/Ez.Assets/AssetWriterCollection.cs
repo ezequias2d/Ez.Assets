@@ -86,19 +86,19 @@ namespace Ez.Assets
         /// <summary>
         /// Based on the <see cref="IMagiced.MagicSupport"/> property it takes the first 
         /// <see cref="IAssetWriter"/> of the <see cref="AssetWriterCollection"/> that supports
-        /// type <typeparamref name="T"/> and tries to write an <paramref name="value"/> to the stream.
+        /// type <paramref name="type"/> and tries to write an <paramref name="value"/> to the stream.
         /// </summary>
-        /// <typeparam name="T">The type of <paramref name="value"/>.</typeparam>
         /// <param name="value">The instance to be written.</param>
+        /// <param name="type">The type of <paramref name="value"/>.</param>
         /// <param name="stream">The destination stream.</param>
         /// <returns><see langword="true"/> if the value was written; otherwise,
         /// <see langword="false"/>.</returns>
-        public bool TryWrite<T>(in T value, Stream stream)
+        public bool TryWrite(in object value, in Type type, Stream stream)
         {
-            if (!_writers.TryGetMagiced<T>(out var writer))
+            if (!_writers.TryGetMagiced(type, out var writer))
                 return false;
 
-            return writer.TryWrite<T>(value, stream);
+            return writer.TryWrite(value, type, stream);
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

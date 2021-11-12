@@ -14,29 +14,20 @@ namespace Ez.Magics
         /// Creates a new instance of <see cref="MagicSupportSlim"/> class.
         /// </summary>
         /// <param name="displayName">The value of <see cref="DisplayName"/>.</param>
-        /// <param name="types">Supported types in <see cref="Types"/> and <see cref="Supports{T}"/>.</param>
+        /// <param name="types">Supported types in <see cref="Types"/> and <see cref="Supports(Type)"/>.</param>
         public MagicSupportSlim(string displayName, params Type[] types)
         {
             DisplayName = displayName;
             _types = new HashSet<Type>(types);
         }
 
-        /// <summary>
-        /// Gets the display name of a <see cref="MagicSupportSlim"/>.
-        /// </summary>
+        /// <inheritdoc/>
         public string DisplayName { get; }
 
-        /// <summary>
-        /// Gets supported types.
-        /// </summary>
+        /// <inheritdoc/>
         public IEnumerable<Type> Types => _types;
 
-        /// <summary>
-        /// Checks if a type is compatible.
-        /// </summary>
-        /// <typeparam name="T">The type to be checked.</typeparam>
-        /// <returns><see langword="true"/> if suppoted, otherwise 
-        /// <see langword="false"/>.</returns>
-        public bool Supports<T>() => _types.Contains(typeof(T));
+        /// <inheritdoc/>
+        public bool Supports(Type type) => _types.Contains(type);
     }
 }

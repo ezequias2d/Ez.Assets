@@ -11,7 +11,7 @@ namespace Ez.Magics
         /// <summary>
         /// Gets the display name of a <see cref="IMagicSupport"/>.
         /// </summary>
-        string DisplayName { get; }
+        public string DisplayName { get; }
 
         /// <summary>
         /// Checks if a type is compatible.
@@ -19,7 +19,15 @@ namespace Ez.Magics
         /// <typeparam name="T">The type to be checked.</typeparam>
         /// <returns><see langword="true"/> if suppoted, otherwise 
         /// <see langword="false"/>.</returns>
-        bool Supports<T>();
+        public bool Supports<T>() => Supports(typeof(T));
+
+        /// <summary>
+        /// Checks if a type is compatible.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <returns><see langword="true"/> if suppoted, otherwise 
+        /// <see langword="false"/>.</returns>
+        public bool Supports(Type type);
 
         /// <summary>
         /// Gets supported types.

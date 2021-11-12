@@ -1,4 +1,5 @@
 ﻿using Ez.Magics;
+using System;
 using System.IO;
 
 namespace Ez.Assets
@@ -17,6 +18,22 @@ namespace Ez.Assets
         /// if it is available, otherwise <see langword="null"/>.</param>
         /// <returns><see langword="true"/> if the value was read; otherwise,
         /// <see langword="false"/>.</returns>
-        bool TryRead<T>(Stream stream, out T value);
+        public bool TryRead<T>(in Stream stream, out T value)
+        {
+            var result = TryRead(stream, typeof(T), out var tmp);
+            value = (T)tmp;
+            return result;
+        }
+
+        /// <summary>
+        /// Attempts to read an <paramref name="value"/> from the stream.
+        /// </summary>
+        /// <param name="type">The type of instance to be readed.</param>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="value">When this method returns, contains the readed instance,
+        /// if it is available, otherwise <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> if the value was read; otherwise,
+        /// <see langword="false"/>.</returns>
+        public bool TryRead(in Stream stream, in Type type, out object value);
     }
 }

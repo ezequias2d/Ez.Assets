@@ -15,22 +15,31 @@ namespace Ez.Assets
         /// <param name="assetName">The asset name to get.</param>
         /// <returns>The first asset found that matches the type 
         /// and name, otherwise <see langword="null"/></returns>
-        T GetAsset<T>(string assetName);
+        public T GetAsset<T>(string assetName) => (T)GetAsset(assetName, typeof(T));
+
+        /// <summary>
+        /// Gets the first loaded asset, if it is already loaded, 
+        /// otherwise try load the asset.
+        /// </summary>
+        /// <param name="type">The asset type to be get.</param>
+        /// <param name="assetName">The asset name to get.</param>
+        /// <returns>The first asset found that matches the type 
+        /// and name, otherwise <see langword="null"/></returns>
+        object GetAsset(string assetName, Type type);
 
         /// <summary>
         /// Loads an asset to the content manager.
         /// </summary>
-        /// <typeparam name="T">The type of asset to be loaded.</typeparam>
         /// <param name="assetName">The name of the asset to be loaded.</param>
         /// <param name="asset">The asset to be loaded.</param>
-        void LoadAsset<T>(string assetName, in T asset);
+        void LoadAsset(string assetName, in object asset);
 
         /// <summary>
         /// Unloads an asset by type and name in a <see cref="IAssetManager"/> instance.
         /// </summary>
-        /// <typeparam name="T">The type of asset to unload.</typeparam>
         /// <param name="assetName">The name of the asset to be unloaded.</param>
-        void UnloadAsset<T>(string assetName);
+        /// <param name="type">The asset type to be unloaded.</param>
+        void UnloadAsset(string assetName, Type type);
 
         /// <summary>
         /// Unloads all assets in a <see cref="IAssetManager"/> instance.

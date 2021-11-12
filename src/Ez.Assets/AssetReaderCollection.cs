@@ -18,7 +18,7 @@ namespace Ez.Assets
         /// </summary>
         /// <param name="displayName">The value of <see cref="IMagicSupport.DisplayName"/>
         /// in <see cref="MagicSupport"/>.</param>
-        public AssetReaderCollection(string displayName)
+        public AssetReaderCollection(in string displayName)
         {
             _readers = new MagicedCollection<IAssetReader>(displayName);
         }
@@ -86,17 +86,17 @@ namespace Ez.Assets
         /// <summary>
         /// Based on the <see cref="IMagiced.MagicSupport"/> property it takes the first 
         /// <see cref="IAssetReader"/> of the <see cref="AssetReaderCollection"/> that supports
-        /// type <typeparamref name="T"/> and tries to read an <paramref name="value"/> of the stream.
+        /// type <paramref name="type"/> and tries to read an <paramref name="value"/> of the stream.
         /// </summary>
-        /// <typeparam name="T">The type of instance to be readed.</typeparam>
+        /// <param name="type">The type of instance to be readed.</param>
         /// <param name="stream">The stream to read from.</param>
         /// <param name="value">When this method returns, contains the readed instance, if it is 
         /// available, otherwise <see langword="null"/>.</param>
         /// <returns><see langword="true"/> if the value was read; otherwise,
         /// <see langword="false"/>.</returns>
-        public bool TryRead<T>(Stream stream, out T value)
+        public bool TryRead(in Stream stream, in Type type, out object value) 
         {
-            if (!_readers.TryGetMagiced<T>(out var reader))
+            if (!_readers.TryGetMagiced(type, out var reader))
             {
                 value = default;
                 return false;
