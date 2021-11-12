@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <Import Project="..\build\common.props.csproj" />
+	
   <ItemGroup>
     <PackageReference Include="Ez.IO" Version="0.3.0-alpha" />
   </ItemGroup>

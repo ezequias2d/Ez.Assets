@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <Import Project="..\build\common.props.csproj" />
+	
   <ItemGroup>
     <PackageReference Include="StbImageSharp" Version="2.22.6" />
     <PackageReference Include="StbImageWriteSharp" Version="1.13.5" />
