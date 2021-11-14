@@ -32,7 +32,7 @@ namespace Ez.Assets.Archive
                 {
                     var entry = _archive.GetEntry(link);
                     using var stream = entry.Open();
-                    return _reader.TryRead(stream, out asset);
+                    return _reader.TryRead(stream, type, out asset);
                 }
                 catch(Exception ex)
                 {
